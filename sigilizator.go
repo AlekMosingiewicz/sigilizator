@@ -7,6 +7,8 @@ import (
 	"strings"
 	"unicode"
 	"os"
+	"math/rand"
+	"time"
 )
 
 
@@ -25,6 +27,17 @@ func sigilize(phrase *string) string {
 		builder.WriteRune(lowercase)
 	}
 	return builder.String()
+}
+
+func shuffle(sigil *string) string {
+	runes := []rune(*sigil)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	r.Shuffle(len(runes), func(i, j int) {
+		runes[i], runes[j] = runes[j], runes[i]
+	})
+
+	return string(runes)
 }
 
 func desigilize(sigil *string, bufReader *bufio.Reader) {
@@ -47,6 +60,9 @@ func main() {
     // Assist or not?
 	assist := flag.Bool("assist", false, "Assist in desigilization")
 
+	// Shuffle or not?
+	doShuffle := flag.Bool("shuffle", false, "Shuffle the resulting string, true by default")
+
 	flag.Parse()
 
 	if (*assist) {
@@ -59,6 +75,11 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	text, _ := reader.ReadString('\n')
 	sigilized := sigilize(&text)
+
+	if (*doShuffle) {
+		sigilized = strings.Replace(shuffle(&sigilized), "\n", "", 1)
+	}
+
 	fmt.Println("Sigilized string: " + sigilized)
 
 	if (*assist) {
