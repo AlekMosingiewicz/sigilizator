@@ -61,7 +61,7 @@ func main() {
 	assist := flag.Bool("assist", false, "Assist in desigilization")
 
 	// Shuffle or not?
-	doShuffle := flag.Bool("shuffle", false, "Shuffle the resulting string, true by default")
+	doShuffle := flag.Bool("shuffle", false, "Shuffle the resulting string, false by default")
 
 	flag.Parse()
 
